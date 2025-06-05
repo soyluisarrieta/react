@@ -1,9 +1,24 @@
 import { useEffect, useRef } from 'react'
-import { Canvas, FabricImage, Textbox } from 'fabric'
+import { Canvas, FabricImage, Textbox, FabricObject } from 'fabric'
 
 const ImageEditor = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const fabricCanvas = useRef<Canvas | null>(null)
+
+  // Configurar estilos por defecto para todos los objetos
+  useEffect(() => {
+    const defaultObjectStyles = {
+      transparentCorners: false,
+      padding: 10,
+      borderColor: '#3d8eff',
+      cornerStyle: 'circle',
+      cornerColor: '#ffffff',
+      cornerStrokeColor: '#3d8eff',
+      cornerSize: 10
+    }
+
+    Object.assign(FabricObject.ownDefaults, defaultObjectStyles)
+  }, [])
 
   useEffect(() => {
     const canvasWidth = 800
