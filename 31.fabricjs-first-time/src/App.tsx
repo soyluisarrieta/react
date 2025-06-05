@@ -1,5 +1,12 @@
-export default function App() {
+import ImageEditor from './components/ImageEditor';
+
+function App() {
   return (
-    <div>App</div>
-  )
+    <div className="App">
+      <h1>Editor de Imágenes Básico</h1>
+      <ImageEditor />
+    </div>
+  );
 }
+
+export default App;
