@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { getWeekMonthYearLabel } from '@/lib/getWeekMonthYearLabel'
 import { format, isSameDay } from 'date-fns'
@@ -7,7 +8,22 @@ import { useWeeklyCalendar } from '@/hooks/useWeeklyCalendar'
 import { cn } from '@/lib/utils'
 
 export default function App () {
-  const { today, currentDate, weekDays, goTo } = useWeeklyCalendar()
+  const [animKey, setAnimKey] = useState(0)
+
+  const {
+    today,
+    currentDate,
+    weekDays,
+    direction,
+    goTo
+  } = useWeeklyCalendar()
+
+  const weekDaysKey = weekDays.map(d => d.toISOString()).join()
+
+  useEffect(() => {
+    setAnimKey(prev => prev + 1)
+  }, [weekDaysKey])
+
   return (
     <div className="p-6 max-w-7xl mx-auto">
 
@@ -28,7 +44,13 @@ export default function App () {
       </header>
 
       {/* Weekly Calendar */}
-      <main className="grid grid-cols-1 gap-1 md:grid-cols-7">
+      <main
+        key={animKey}
+        className={cn(
+          'grid grid-cols-1 gap-1 md:grid-cols-7 animation-duration-200',
+          direction === 'left' ? 'animate-fade-in-right' : 'animate-fade-in-left'
+        )}
+      >
         {weekDays.map((day) => (
           <div
             key={day.toISOString()}
