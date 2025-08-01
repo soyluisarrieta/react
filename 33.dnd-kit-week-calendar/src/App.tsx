@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button'
 import { addDays, format, startOfWeek } from 'date-fns'
 import { es } from 'date-fns/locale'
-import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react'
+import { ChevronLeftIcon, ChevronRightIcon, PlusIcon, SparkleIcon } from 'lucide-react'
 
 export default function App () {
   const today = new Date()
@@ -10,6 +10,7 @@ export default function App () {
 
   return (
     <div className="p-6 max-w-7xl mx-auto">
+
       {/* Calendar header */}
       <header className="flex items-center justify-between mb-4">
         <h2 className="text-3xl font-semibold">Octubre, 2025</h2>
@@ -32,13 +33,32 @@ export default function App () {
             className='bg-muted rounded-lg group'
             style={{ height: '30rem' }}
           >
-            <div className="mb-4 p-2 text-center">
+            {/* Calendar days */}
+            <header className="mb-4 p-2 text-center">
               <span className="font-bold tracking-tighter text-2xl text-foreground">
                 {format(day, 'dd')}
               </span>
               <h3 className="text-sm font-medium text-muted-foreground capitalize">
                 {format(day, 'eee', { locale: es })}
               </h3>
+            </header>
+
+            {/* Buttons to create cards */}
+            <div className='px-2'>
+              <div
+                className="
+                  hidden w-full rounded-lg py-10 group-hover:flex justify-center gap-1 opacity-70 hover:opacity-100 transition-opacity
+                  [&>button]:not-hover:bg-white [&>button]:not-hover:text-foreground
+                "
+                style={{ backgroundImage: 'repeating-linear-gradient(120deg, #f0f0f0, #f0f0f0 7px, #d1d5db  9px)' }}
+              >
+                <Button size='icon'>
+                  <PlusIcon />
+                </Button>
+                <Button size='icon'>
+                  <SparkleIcon />
+                </Button>
+              </div>
             </div>
           </div>
         ))}
