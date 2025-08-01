@@ -6,6 +6,7 @@ import { es } from 'date-fns/locale'
 import { ChevronLeftIcon, ChevronRightIcon, PlusIcon, SparkleIcon } from 'lucide-react'
 import { useWeeklyCalendar } from '@/hooks/useWeeklyCalendar'
 import { cn } from '@/lib/utils'
+import { MOCK_TASKS } from '@/mocks/Tasks'
 
 export default function App () {
   const [animKey, setAnimKey] = useState(0)
@@ -74,13 +75,21 @@ export default function App () {
 
             {/* Card list */}
             <div className='space-y-2'>
-              {isSameDay(day, today) && (
-                <div className='bg-purple-100 border-purple-300 p-3 rounded-lg border-2 cursor-grab active:cursor-grabbing select-none'>
-                  <h4 className='font-medium text-sm line-clamp-2'>🚀 Título un poco largo de la tarjeta para ver su límite</h4>
-                  <time className='text-xs font-mono text-gray-500 bg-white/70 px-2 py-1 rounded inline-block mb-2'>12:34</time>
-                  <p className='text-xs text-gray-600 line-clamp-2'>Descripción breve de la tarjeta para dar una información rápida.</p>
+              {(MOCK_TASKS[format(day, 'yyyy-MM-dd')] || []).map((task) => (
+                <div
+                  key={task.id}
+                  className={cn(
+                    'p-3 rounded-lg border-2 shadow-sm cursor-grab active:cursor-grabbing select-none',
+                    task.color
+                  )}
+                >
+                  <h4 className="font-medium text-sm line-clamp-2">{task.title}</h4>
+                  <time className="text-xs font-mono text-gray-500 bg-white/70 px-2 py-1 rounded inline-block mb-1">{task.time}</time>
+                  {task.description && (
+                    <p className="text-xs text-gray-600 line-clamp-2">{task.description}</p>
+                  )}
                 </div>
-              )}
+              ))}
 
               {/* Buttons to create cards */}
               <div className='px-2'>
