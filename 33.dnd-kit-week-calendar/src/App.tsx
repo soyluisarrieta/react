@@ -1,12 +1,13 @@
 import { Button } from '@/components/ui/button'
 import { getWeekMonthYearLabel } from '@/lib/getWeekMonthYearLabel'
-import { format } from 'date-fns'
+import { format, isSameDay } from 'date-fns'
 import { es } from 'date-fns/locale'
 import { ChevronLeftIcon, ChevronRightIcon, PlusIcon, SparkleIcon } from 'lucide-react'
 import { useWeeklyCalendar } from '@/hooks/useWeeklyCalendar'
+import { cn } from '@/lib/utils'
 
 export default function App () {
-  const { currentDate, weekDays, goTo } = useWeeklyCalendar()
+  const { today, currentDate, weekDays, goTo } = useWeeklyCalendar()
   return (
     <div className="p-6 max-w-7xl mx-auto">
 
@@ -35,13 +36,18 @@ export default function App () {
             style={{ height: '30rem' }}
           >
             {/* Calendar days */}
-            <header className="mb-4 p-2 text-center">
-              <span className="font-bold tracking-tighter text-2xl text-foreground">
-                {format(day, 'dd')}
-              </span>
-              <h3 className="text-sm font-medium text-muted-foreground capitalize">
-                {format(day, 'eee', { locale: es })}
-              </h3>
+            <header className="mb-4 p-2 text-center pointer-events-none">
+              <div className={cn(
+                'inline-block px-5 py-1 rounded-lg',
+                isSameDay(day, today) && 'bg-primary text-primary-foreground'
+              )}>
+                <span className="font-bold tracking-tighter text-2xl">
+                  {format(day, 'dd')}
+                </span>
+                <h3 className="text-sm opacity-70 capitalize">
+                  {format(day, 'eee', { locale: es })}
+                </h3>
+              </div>
             </header>
 
             {/* Buttons to create cards */}

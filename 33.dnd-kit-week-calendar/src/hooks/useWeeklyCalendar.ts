@@ -8,6 +8,7 @@ export const useWeeklyCalendar = () => {
   const weekDays = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i))
 
   return {
+    today: new Date(),
     currentDate,
     weekDays,
     goTo: {
