@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button'
+import { getWeekMonthYearLabel } from '@/lib/getWeekMonthYearLabel'
 import { addDays, format, startOfWeek } from 'date-fns'
 import { es } from 'date-fns/locale'
 import { ChevronLeftIcon, ChevronRightIcon, PlusIcon, SparkleIcon } from 'lucide-react'
@@ -13,7 +14,9 @@ export default function App () {
 
       {/* Calendar header */}
       <header className="flex items-center justify-between mb-4">
-        <h2 className="text-3xl font-semibold">Octubre, 2025</h2>
+        <h2 className="text-3xl font-semibold">
+          {getWeekMonthYearLabel(today)}
+        </h2>
         <div className='flex items-center gap-1'>
           <Button variant='outline' size='icon'>
             <ChevronLeftIcon />
