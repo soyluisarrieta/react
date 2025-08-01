@@ -58,7 +58,7 @@ export default function App () {
             style={{ height: '30rem' }}
           >
             {/* Calendar days */}
-            <header className="mb-4 p-2 text-center pointer-events-none">
+            <header className="p-2 text-center pointer-events-none">
               <div className={cn(
                 'inline-block px-5 py-1 rounded-lg',
                 isSameDay(day, today) && 'bg-primary text-primary-foreground'
@@ -72,21 +72,32 @@ export default function App () {
               </div>
             </header>
 
-            {/* Buttons to create cards */}
-            <div className='px-2'>
-              <div
-                className="
-                  hidden w-full rounded-lg py-10 group-hover:flex justify-center gap-1 opacity-70 hover:opacity-100 transition-opacity
+            {/* Card list */}
+            <div className='space-y-2'>
+              {isSameDay(day, today) && (
+                <div className='bg-purple-100 border-purple-300 p-3 rounded-lg border-2 cursor-grab active:cursor-grabbing select-none'>
+                  <h4 className='font-medium text-sm line-clamp-2'>🚀 Título un poco largo de la tarjeta para ver su límite</h4>
+                  <time className='text-xs font-mono text-gray-500 bg-white/70 px-2 py-1 rounded inline-block mb-2'>12:34</time>
+                  <p className='text-xs text-gray-600 line-clamp-2'>Descripción breve de la tarjeta para dar una información rápida.</p>
+                </div>
+              )}
+
+              {/* Buttons to create cards */}
+              <div className='px-2'>
+                <div
+                  className="
+                    hidden w-full rounded-lg py-10 group-hover:flex justify-center gap-1 opacity-70 hover:opacity-100 transition-opacity
                   [&>button]:not-hover:bg-white [&>button]:not-hover:text-foreground
-                "
-                style={{ backgroundImage: 'repeating-linear-gradient(120deg, #f0f0f0, #f0f0f0 7px, #d1d5db  9px)' }}
-              >
-                <Button size='icon'>
-                  <PlusIcon />
-                </Button>
-                <Button size='icon'>
-                  <SparkleIcon />
-                </Button>
+                  "
+                  style={{ backgroundImage: 'repeating-linear-gradient(120deg, #f0f0f0, #f0f0f0 7px, #d1d5db  9px)' }}
+                >
+                  <Button size='icon'>
+                    <PlusIcon />
+                  </Button>
+                  <Button size='icon'>
+                    <SparkleIcon />
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
