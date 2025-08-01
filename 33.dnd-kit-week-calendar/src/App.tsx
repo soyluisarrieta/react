@@ -1,13 +1,27 @@
+import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { getWeekMonthYearLabel } from '@/lib/getWeekMonthYearLabel'
-import { addDays, format, startOfWeek } from 'date-fns'
+import { addDays, addWeeks, format, startOfWeek, subWeeks } from 'date-fns'
 import { es } from 'date-fns/locale'
 import { ChevronLeftIcon, ChevronRightIcon, PlusIcon, SparkleIcon } from 'lucide-react'
 
 export default function App () {
-  const today = new Date()
-  const weekStart = startOfWeek(today, { weekStartsOn: 1 })
+  const [currentDate, setCurrentDate] = useState(new Date())
+
+  const weekStart = startOfWeek(currentDate, { weekStartsOn: 1 })
   const weekDays = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i))
+
+  const goToPreviousWeek = () => {
+    setCurrentDate(prev => subWeeks(prev, 1))
+  }
+
+  const goToNextWeek = () => {
+    setCurrentDate(prev => addWeeks(prev, 1))
+  }
+
+  const goToToday = () => {
+    setCurrentDate(new Date())
+  }
 
   return (
     <div className="p-6 max-w-7xl mx-auto">
@@ -15,14 +29,14 @@ export default function App () {
       {/* Calendar header */}
       <header className="flex items-center justify-between mb-4">
         <h2 className="text-3xl font-semibold">
-          {getWeekMonthYearLabel(today)}
+          {getWeekMonthYearLabel(currentDate)}
         </h2>
         <div className='flex items-center gap-1'>
-          <Button variant='outline' size='icon'>
+          <Button variant='outline' size='icon' onClick={goToPreviousWeek}>
             <ChevronLeftIcon />
           </Button>
-          <Button variant='outline'>Hoy</Button>
-          <Button variant='outline' size='icon'>
+          <Button variant='outline' onClick={goToToday}>Hoy</Button>
+          <Button variant='outline' size='icon' onClick={goToNextWeek}>
             <ChevronRightIcon />
           </Button>
         </div>
