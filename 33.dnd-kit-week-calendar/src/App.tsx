@@ -1,7 +1,9 @@
-import React from 'react'
+import { Button } from "@/components/ui/button";
 
 export default function App() {
   return (
-    <div>App</div>
+    <div className="flex min-h-svh flex-col items-center justify-center">
+      <Button>Hola ShadCN + Tailwind</Button>
+    </div>
   )
 }
