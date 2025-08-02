@@ -8,11 +8,20 @@ import { useWeeklyCalendar } from '@/hooks/useWeeklyCalendar'
 import { cn } from '@/lib/utils'
 import { MOCK_TASKS } from '@/mocks/Tasks'
 import TaskCard from '@/components/TaskCard'
+import {
+  DndContext,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+  type DragStartEvent
+} from '@dnd-kit/core'
 
 export default function App () {
-  const [tasks, setTasks] = useState(MOCK_TASKS)
+  const [tasksByDay, setTasksByDay] = useState(MOCK_TASKS)
   const [animKey, setAnimKey] = useState(0)
 
+  // Calendar navigation
   const {
     today,
     currentDate,
@@ -26,6 +35,24 @@ export default function App () {
   useEffect(() => {
     setAnimKey(prev => prev + 1)
   }, [weekDaysKey])
+
+  // Active dnd after 8px
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8
+      }
+    })
+  )
+
+  // dnd handlers
+  const handleDragStart = (event: DragStartEvent) => {
+    console.log('Drag started:', event)
+  }
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    console.log('Drag ended:', event)
+  }
 
   return (
     <div className="p-6 max-w-7xl mx-auto">
@@ -47,61 +74,67 @@ export default function App () {
       </header>
 
       {/* Weekly Calendar */}
-      <main
-        key={animKey}
-        className={cn(
-          'grid grid-cols-1 gap-1 md:grid-cols-7 animation-duration-200',
-          direction === 'left' ? 'animate-fade-in-right' : 'animate-fade-in-left'
-        )}
+      <DndContext
+        sensors={sensors}
+        onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}
       >
-        {weekDays.map((day) => (
-          <div
-            key={day.toISOString()}
-            className='bg-muted rounded-lg group'
-            style={{ height: '30rem' }}
-          >
-            {/* Calendar days */}
-            <header className="p-2 text-center pointer-events-none">
-              <div className={cn(
-                'inline-block px-5 py-1 rounded-lg',
-                isSameDay(day, today) && 'bg-primary text-primary-foreground'
-              )}>
-                <span className="font-bold tracking-tighter text-2xl">
-                  {format(day, 'dd')}
-                </span>
-                <h3 className="text-sm opacity-70 capitalize">
-                  {format(day, 'eee', { locale: es })}
-                </h3>
-              </div>
-            </header>
+        <main
+          key={animKey}
+          className={cn(
+            'grid grid-cols-1 gap-1 md:grid-cols-7 animation-duration-200',
+            direction === 'left' ? 'animate-fade-in-right' : 'animate-fade-in-left'
+          )}
+        >
+          {weekDays.map((day) => (
+            <div
+              key={day.toISOString()}
+              className='bg-muted rounded-lg group'
+              style={{ height: '30rem' }}
+            >
+              {/* Calendar days */}
+              <header className="p-2 text-center pointer-events-none">
+                <div className={cn(
+                  'inline-block px-5 py-1 rounded-lg',
+                  isSameDay(day, today) && 'bg-primary text-primary-foreground'
+                )}>
+                  <span className="font-bold tracking-tighter text-2xl">
+                    {format(day, 'dd')}
+                  </span>
+                  <h3 className="text-sm opacity-70 capitalize">
+                    {format(day, 'eee', { locale: es })}
+                  </h3>
+                </div>
+              </header>
 
-            {/* Card list */}
-            <div className='space-y-2'>
-              {(tasks[format(day, 'yyyy-MM-dd')] || []).map((task) => (
-                <TaskCard key={task.id} task={task} />
-              ))}
+              {/* Card list */}
+              <div className='space-y-2'>
+                {(tasksByDay[format(day, 'yyyy-MM-dd')] || []).map((task) => (
+                  <TaskCard key={task.id} task={task} />
+                ))}
 
-              {/* Buttons to create cards */}
-              <div className='px-2'>
-                <div
-                  className="
+                {/* Buttons to create cards */}
+                <div className='px-2'>
+                  <div
+                    className="
                     hidden w-full rounded-lg py-10 group-hover:flex justify-center gap-1 opacity-70 hover:opacity-100 transition-opacity
                   [&>button]:not-hover:bg-white [&>button]:not-hover:text-foreground
                   "
-                  style={{ backgroundImage: 'repeating-linear-gradient(120deg, #f0f0f0, #f0f0f0 7px, #d1d5db  9px)' }}
-                >
-                  <Button size='icon'>
-                    <PlusIcon />
-                  </Button>
-                  <Button size='icon'>
-                    <SparkleIcon />
-                  </Button>
+                    style={{ backgroundImage: 'repeating-linear-gradient(120deg, #f0f0f0, #f0f0f0 7px, #d1d5db  9px)' }}
+                  >
+                    <Button size='icon'>
+                      <PlusIcon />
+                    </Button>
+                    <Button size='icon'>
+                      <SparkleIcon />
+                    </Button>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        ))}
-      </main>
+          ))}
+        </main>
+      </DndContext>
     </div>
   )
 }
