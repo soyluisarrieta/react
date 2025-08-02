@@ -13,7 +13,8 @@ export default function TaskCard ({ task }: TaskCardProps) {
     listeners,
     setNodeRef,
     transform,
-    transition
+    transition,
+    isDragging
   } = useSortable({ id: task.id })
 
   const style = {
@@ -26,7 +27,10 @@ export default function TaskCard ({ task }: TaskCardProps) {
       ref={setNodeRef}
       className={cn(
         'p-3 rounded-lg border-2 shadow-sm cursor-grab active:cursor-grabbing select-none',
-        task.color
+        task.color,
+        isDragging
+          ? 'opacity-50 scale-105 shadow-lg z-50 rotate-1'
+          : 'hover:shadow-md hover:-translate-y-0.5'
       )}
       style={style}
       {...attributes}
