@@ -66,7 +66,34 @@ export default function App () {
   }
 
   const handleDragEnd = (event: DragEndEvent) => {
-    console.log('Drag ended:', event)
+    const { active, over } = event
+
+    if (!over || active.id === over.id) return
+
+    const activeId = active.id
+    const destinationDay = over.id
+
+    // Get current day of task
+    const originDay = Object.keys(tasksByDay).find(day =>
+      tasksByDay[day].some(task => task.id === activeId)
+    )
+
+    if (!originDay || originDay === destinationDay) return
+
+    // Get task
+    const activeTask = tasksByDay[originDay].find(task => task.id === activeId)
+    if (!activeTask) return
+
+    // Update tasks position
+    setTasksByDay(prev => {
+      const newOrigin = prev[originDay].filter(task => task.id !== activeId)
+      const newDest = [...(prev[destinationDay] || []), activeTask]
+      return {
+        ...prev,
+        [originDay]: newOrigin,
+        [destinationDay]: newDest
+      }
+    })
   }
 
   return (
