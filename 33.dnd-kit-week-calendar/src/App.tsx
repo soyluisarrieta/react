@@ -16,6 +16,7 @@ import {
   type DragEndEvent,
   type DragStartEvent
 } from '@dnd-kit/core'
+import { DroppableColumn } from '@/components/DroppableColumn'
 
 export default function App () {
   const [tasksByDay, setTasksByDay] = useState(MOCK_TASKS)
@@ -87,51 +88,55 @@ export default function App () {
           )}
         >
           {weekDays.map((day) => (
-            <div
-              key={day.toISOString()}
-              className='bg-muted rounded-lg group'
-              style={{ height: '30rem' }}
+            <DroppableColumn
+              key={format(day, 'yyyy-MM-dd')}
+              id={format(day, 'yyyy-MM-dd')}
             >
-              {/* Calendar days */}
-              <header className="p-2 text-center pointer-events-none">
-                <div className={cn(
-                  'inline-block px-5 py-1 rounded-lg',
-                  isSameDay(day, today) && 'bg-primary text-primary-foreground'
-                )}>
-                  <span className="font-bold tracking-tighter text-2xl">
-                    {format(day, 'dd')}
-                  </span>
-                  <h3 className="text-sm opacity-70 capitalize">
-                    {format(day, 'eee', { locale: es })}
-                  </h3>
-                </div>
-              </header>
+              <div
+                className='bg-muted rounded-lg group'
+                style={{ height: '30rem' }}
+              >
+                {/* Calendar days */}
+                <header className="p-2 text-center pointer-events-none">
+                  <div className={cn(
+                    'inline-block px-5 py-1 rounded-lg',
+                    isSameDay(day, today) && 'bg-primary text-primary-foreground'
+                  )}>
+                    <span className="font-bold tracking-tighter text-2xl">
+                      {format(day, 'dd')}
+                    </span>
+                    <h3 className="text-sm opacity-70 capitalize">
+                      {format(day, 'eee', { locale: es })}
+                    </h3>
+                  </div>
+                </header>
 
-              {/* Card list */}
-              <div className='space-y-2'>
-                {(tasksByDay[format(day, 'yyyy-MM-dd')] || []).map((task) => (
-                  <TaskCard key={task.id} task={task} />
-                ))}
+                {/* Card list */}
+                <div className='space-y-2'>
+                  {(tasksByDay[format(day, 'yyyy-MM-dd')] || []).map((task) => (
+                    <TaskCard key={task.id} task={task} />
+                  ))}
 
-                {/* Buttons to create cards */}
-                <div className='px-2'>
-                  <div
-                    className="
-                    hidden w-full rounded-lg py-10 group-hover:flex justify-center gap-1 opacity-70 hover:opacity-100 transition-opacity
-                  [&>button]:not-hover:bg-white [&>button]:not-hover:text-foreground
-                  "
-                    style={{ backgroundImage: 'repeating-linear-gradient(120deg, #f0f0f0, #f0f0f0 7px, #d1d5db  9px)' }}
-                  >
-                    <Button size='icon'>
-                      <PlusIcon />
-                    </Button>
-                    <Button size='icon'>
-                      <SparkleIcon />
-                    </Button>
+                  {/* Buttons to create cards */}
+                  <div className='px-2'>
+                    <div
+                      className="
+                        hidden w-full rounded-lg py-10 group-hover:flex justify-center gap-1 opacity-70 hover:opacity-100 transition-opacity
+                      [&>button]:not-hover:bg-white [&>button]:not-hover:text-foreground
+                      "
+                      style={{ backgroundImage: 'repeating-linear-gradient(120deg, #f0f0f0, #f0f0f0 7px, #d1d5db  9px)' }}
+                    >
+                      <Button size='icon'>
+                        <PlusIcon />
+                      </Button>
+                      <Button size='icon'>
+                        <SparkleIcon />
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            </DroppableColumn>
           ))}
         </main>
       </DndContext>
