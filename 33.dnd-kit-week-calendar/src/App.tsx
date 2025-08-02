@@ -6,22 +6,24 @@ import { es } from 'date-fns/locale'
 import { ChevronLeftIcon, ChevronRightIcon, PlusIcon, SparkleIcon } from 'lucide-react'
 import { useWeeklyCalendar } from '@/hooks/useWeeklyCalendar'
 import { cn } from '@/lib/utils'
-import { MOCK_TASKS } from '@/mocks/Tasks'
+import { MOCK_TASKS, type Task } from '@/mocks/Tasks'
 import TaskCard from '@/components/TaskCard'
+import { DroppableColumn } from '@/components/DroppableColumn'
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
+import { sortTasksByTime } from '@/lib/sortTasksByTime'
 import {
   DndContext,
+  DragOverlay,
   PointerSensor,
   useSensor,
   useSensors,
   type DragEndEvent,
   type DragStartEvent
 } from '@dnd-kit/core'
-import { DroppableColumn } from '@/components/DroppableColumn'
-import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
-import { sortTasksByTime } from '@/lib/sortTasksByTime'
 
 export default function App () {
   const [tasksByDay, setTasksByDay] = useState(MOCK_TASKS)
+  const [activeTask, setActiveTask] = useState<Task | null>(null)
   const [animKey, setAnimKey] = useState(0)
 
   // Calendar navigation
@@ -50,7 +52,17 @@ export default function App () {
 
   // dnd handlers
   const handleDragStart = (event: DragStartEvent) => {
-    console.log('Drag started:', event)
+    const { active } = event
+    const taskId = active.id as string
+
+    // Active overlay task
+    for (const [_, dayTasks] of Object.entries(tasksByDay)) {
+      const task = dayTasks.find((t) => t.id === taskId)
+      if (task) {
+        setActiveTask(task)
+        break
+      }
+    }
   }
 
   const handleDragEnd = (event: DragEndEvent) => {
@@ -148,6 +160,15 @@ export default function App () {
             )
           })}
         </main>
+
+        <DragOverlay>
+          {activeTask ? (
+            <div className={`p-3 rounded-lg border-2 shadow-lg ${activeTask.color} opacity-90`}>
+              <h4 className="font-medium text-sm">{activeTask.title}</h4>
+              {activeTask.description && <p className="text-xs text-gray-600 mt-1">{activeTask.description}</p>}
+            </div>
+          ) : null}
+        </DragOverlay>
       </DndContext>
     </div>
   )
