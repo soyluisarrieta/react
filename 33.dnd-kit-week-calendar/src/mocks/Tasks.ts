@@ -1,10 +1,12 @@
-export const MOCK_TASKS: Record<string, {
+export interface Task {
   id: string
   title: string
   description?: string
   time: string
   color: string
-}[]> = {
+}
+
+export const MOCK_TASKS: Record<string, Task[]> = {
   '2025-08-01': [
     {
       id: '1',

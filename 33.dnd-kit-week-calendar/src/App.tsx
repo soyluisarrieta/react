@@ -7,6 +7,7 @@ import { ChevronLeftIcon, ChevronRightIcon, PlusIcon, SparkleIcon } from 'lucide
 import { useWeeklyCalendar } from '@/hooks/useWeeklyCalendar'
 import { cn } from '@/lib/utils'
 import { MOCK_TASKS } from '@/mocks/Tasks'
+import TaskCard from '@/components/TaskCard'
 
 export default function App () {
   const [animKey, setAnimKey] = useState(0)
@@ -76,19 +77,7 @@ export default function App () {
             {/* Card list */}
             <div className='space-y-2'>
               {(MOCK_TASKS[format(day, 'yyyy-MM-dd')] || []).map((task) => (
-                <div
-                  key={task.id}
-                  className={cn(
-                    'p-3 rounded-lg border-2 shadow-sm cursor-grab active:cursor-grabbing select-none',
-                    task.color
-                  )}
-                >
-                  <h4 className="font-medium text-sm line-clamp-2">{task.title}</h4>
-                  <time className="text-xs font-mono text-gray-500 bg-white/70 px-2 py-1 rounded inline-block mb-1">{task.time}</time>
-                  {task.description && (
-                    <p className="text-xs text-gray-600 line-clamp-2">{task.description}</p>
-                  )}
-                </div>
+                <TaskCard key={task.id} task={task} />
               ))}
 
               {/* Buttons to create cards */}
