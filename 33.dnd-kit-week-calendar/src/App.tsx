@@ -71,7 +71,9 @@ export default function App () {
     if (!over || active.id === over.id) return
 
     const activeId = active.id
-    const destinationDay = over.id
+    const destinationDay = Object.keys(tasksByDay).find(day =>
+      tasksByDay[day].some(task => task.id === over.id)
+    ) ?? over.id
 
     // Get current day of task
     const originDay = Object.keys(tasksByDay).find(day =>
