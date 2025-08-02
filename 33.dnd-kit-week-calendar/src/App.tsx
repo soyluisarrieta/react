@@ -17,6 +17,7 @@ import {
   type DragStartEvent
 } from '@dnd-kit/core'
 import { DroppableColumn } from '@/components/DroppableColumn'
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 
 export default function App () {
   const [tasksByDay, setTasksByDay] = useState(MOCK_TASKS)
@@ -113,9 +114,14 @@ export default function App () {
 
                 {/* Card list */}
                 <div className='space-y-2'>
-                  {(tasksByDay[format(day, 'yyyy-MM-dd')] || []).map((task) => (
-                    <TaskCard key={task.id} task={task} />
-                  ))}
+                  <SortableContext
+                    items={(tasksByDay[format(day, 'yyyy-MM-dd')] || []).map(task => task.id)}
+                    strategy={verticalListSortingStrategy}
+                  >
+                    {(tasksByDay[format(day, 'yyyy-MM-dd')] || []).map((task) => (
+                      <TaskCard key={task.id} task={task} />
+                    ))}
+                  </SortableContext>
 
                   {/* Buttons to create cards */}
                   <div className='px-2'>
