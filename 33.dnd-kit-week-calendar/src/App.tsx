@@ -10,6 +10,7 @@ import { MOCK_TASKS } from '@/mocks/Tasks'
 import TaskCard from '@/components/TaskCard'
 
 export default function App () {
+  const [tasks, setTasks] = useState(MOCK_TASKS)
   const [animKey, setAnimKey] = useState(0)
 
   const {
@@ -76,7 +77,7 @@ export default function App () {
 
             {/* Card list */}
             <div className='space-y-2'>
-              {(MOCK_TASKS[format(day, 'yyyy-MM-dd')] || []).map((task) => (
+              {(tasks[format(day, 'yyyy-MM-dd')] || []).map((task) => (
                 <TaskCard key={task.id} task={task} />
               ))}
 
