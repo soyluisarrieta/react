@@ -200,7 +200,7 @@ export default function App () {
 
         <DragOverlay>
           {activeTask ? (
-            <div className={`p-3 rounded-lg border-2 shadow-lg ${activeTask.color} opacity-90`}>
+            <div className={`cursor-grabbing p-3 rounded-lg border-2 shadow-lg ${activeTask.color} opacity-90`}>
               <h4 className="font-medium text-sm">{activeTask.title}</h4>
               {activeTask.description && <p className="text-xs text-gray-600 mt-1">{activeTask.description}</p>}
             </div>
