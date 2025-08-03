@@ -5,9 +5,10 @@ import { CSS } from '@dnd-kit/utilities'
 
 interface TaskCardProps {
   task: Task
+  disabled?: boolean
 }
 
-export default function TaskCard ({ task }: TaskCardProps) {
+export default function TaskCard ({ task, disabled = false }: TaskCardProps) {
   const {
     attributes,
     listeners,
@@ -15,10 +16,13 @@ export default function TaskCard ({ task }: TaskCardProps) {
     transform,
     transition,
     isDragging
-  } = useSortable({ id: task.id })
+  } = useSortable({
+    id: task.id,
+    disabled: disabled
+  })
 
   const style = {
-    transform: CSS.Transform.toString(transform),
+    transform: disabled ? 'none' : CSS.Transform.toString(transform),
     transition
   }
 

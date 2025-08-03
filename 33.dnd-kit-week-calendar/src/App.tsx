@@ -24,6 +24,7 @@ import {
 export default function App () {
   const [tasksByDay, setTasksByDay] = useState(MOCK_TASKS)
   const [activeTask, setActiveTask] = useState<Task | null>(null)
+  const [dragSourceDay, setDragSourceDay] = useState<string | null>(null)
   const [animKey, setAnimKey] = useState(0)
 
   // Calendar navigation
@@ -56,10 +57,11 @@ export default function App () {
     const taskId = active.id as string
 
     // Active overlay task
-    for (const [_, dayTasks] of Object.entries(tasksByDay)) {
+    for (const [dayId, dayTasks] of Object.entries(tasksByDay)) {
       const task = dayTasks.find((t) => t.id === taskId)
       if (task) {
         setActiveTask(task)
+        setDragSourceDay(dayId)
         break
       }
     }
@@ -67,6 +69,8 @@ export default function App () {
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event
+    setActiveTask(null)
+    setDragSourceDay(null)
 
     if (!over || active.id === over.id) return
 
@@ -159,10 +163,14 @@ export default function App () {
                   <div className='space-y-2'>
                     <SortableContext
                       items={dayTasks.map(task => task.id)}
-                      strategy={verticalListSortingStrategy}
+                      strategy={dragSourceDay ? undefined : verticalListSortingStrategy}
                     >
                       {dayTasks.map((task) => (
-                        <TaskCard key={task.id} task={task} />
+                        <TaskCard
+                          key={task.id}
+                          task={task}
+                          disabled={dragSourceDay === dayId}
+                        />
                       ))}
                     </SortableContext>
 
