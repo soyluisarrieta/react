@@ -5,10 +5,14 @@ import type { ReactNode } from 'react'
 interface DroppableColumnProps {
   id: string
   children: ReactNode
+  isOver?: boolean
 }
 
-export function DroppableColumn ({ id, children }: DroppableColumnProps) {
-  const { isOver, setNodeRef } = useDroppable({ id })
+export function DroppableColumn ({ id, children, isOver: externalIsOver }: DroppableColumnProps) {
+  const { isOver: internalIsOver, setNodeRef } = useDroppable({ id })
+
+  // Usar el isOver externo si está disponible, sino usar el interno
+  const isOver = externalIsOver !== undefined ? externalIsOver : internalIsOver
 
   return (
     <div

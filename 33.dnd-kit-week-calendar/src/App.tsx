@@ -18,13 +18,15 @@ import {
   useSensor,
   useSensors,
   type DragEndEvent,
-  type DragStartEvent
+  type DragStartEvent,
+  type DragOverEvent
 } from '@dnd-kit/core'
 
 export default function App () {
   const [tasksByDay, setTasksByDay] = useState(MOCK_TASKS)
   const [activeTask, setActiveTask] = useState<Task | null>(null)
   const [dragSourceDay, setDragSourceDay] = useState<string | null>(null)
+  const [dragOverDay, setDragOverDay] = useState<string | null>(null)
   const [animKey, setAnimKey] = useState(0)
 
   // Calendar navigation
@@ -54,7 +56,7 @@ export default function App () {
   // dnd handlers
   const handleDragStart = (event: DragStartEvent) => {
     const { active } = event
-    const taskId = active.id as string
+    const taskId = active.id as Task['id']
 
     // Active overlay task
     for (const [dayId, dayTasks] of Object.entries(tasksByDay)) {
@@ -67,14 +69,33 @@ export default function App () {
     }
   }
 
+  const handleDragOver = (event: DragOverEvent) => {
+    const { over } = event
+
+    if (!over) {
+      setDragOverDay(null)
+      return
+    }
+
+    const overId = over.id as Task['id']
+
+    // Get day if is on the task
+    const targetDay = Object.keys(tasksByDay).find(day =>
+      tasksByDay[day].some(task => task.id === overId)
+    ) ?? overId
+
+    setDragOverDay(targetDay)
+  }
+
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event
     setActiveTask(null)
     setDragSourceDay(null)
+    setDragOverDay(null)
 
     if (!over || active.id === over.id) return
 
-    const activeId = active.id
+    const activeId = active.id as Task['id']
     const destinationDay = Object.keys(tasksByDay).find(day =>
       tasksByDay[day].some(task => task.id === over.id)
     ) ?? over.id
@@ -125,6 +146,7 @@ export default function App () {
       <DndContext
         sensors={sensors}
         onDragStart={handleDragStart}
+        onDragOver={handleDragOver}
         onDragEnd={handleDragEnd}
       >
         <main
@@ -139,7 +161,11 @@ export default function App () {
             const dayTasks = sortTasksByTime(tasksByDay[dayId] || [])
 
             return (
-              <DroppableColumn key={dayId} id={dayId}>
+              <DroppableColumn
+                key={dayId}
+                id={dayId}
+                isOver={dragOverDay === dayId}
+              >
                 <div
                   className='bg-muted rounded-lg group'
                   style={{ height: '30rem' }}
